@@ -19,8 +19,8 @@ This is a Shiny web application that calculates the Body Mass Index (BMI) of an 
   - Provides additional information about BMI and its calculation.
 
 ## Screenshot
+<img width="1015" alt="Screenshot 2025-01-20 at 10 10 04" src="https://github.com/user-attachments/assets/16425dd2-e16f-410e-9883-1a8f7a5a34e7" />
 
-![BMI Calculator Screenshot](Screenshot%202025-01-20%20at%2010.10.04.png)
 
 ## How to Access the App
 

@@ -1,0 +1,12 @@
+name: BMICalculator
+title: BMICalculator
+username: asharip
+account: asharip
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13757704
+bundleId: 9670937
+url: https://asharip.shinyapps.io/BMICalculator/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

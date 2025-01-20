@@ -12,6 +12,7 @@ where *kg* represents the person's weight and *m^2* the person's squared height.
 #### About this BMI Calculator
 
 This *BMI Calculator* is for adults 20 years and older. Further information on calculating BMI for children and teenagers is available from the CDC [2].
+This app was deployed to shinyapps.io and available at: https://asharip.shinyapps.io/BMICalculator/
 
 #### References
 1. Centers for Disease Control. [Body Mass Index (BMI)](https://www.cdc.gov/healthyweight/assessing/bmi/index.html), Accessed January 26, 2020.

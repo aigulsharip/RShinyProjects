@@ -33,6 +33,52 @@ categorize_bmi <- function(bmi) {
   }
 }
 
+# Function to calculate weight change
+calculate_weight_change <- function(bmi, height, weight) {
+  healthy_min_weight <- 18.5 * ((height / 100) ^ 2)
+  healthy_max_weight <- 25 * ((height / 100) ^ 2)
+  
+  if (bmi < 18.5) {
+    return(paste0("Gain at least ", round(healthy_min_weight - weight, 1), " kg"))
+  } else if (bmi > 25) {
+    return(paste0("Lose at least ", round(weight - healthy_max_weight, 1), " kg"))
+  } else {
+    return("Your weight is healthy")
+  }
+}
+
+# Function to create BMI gauge
+create_bmi_gauge <- function(bmi) {
+  plot_ly(
+    type = "indicator",
+    mode = "gauge+number+delta",
+    value = bmi,
+    title = list(text = "BMI Gauge"),
+    gauge = list(
+      axis = list(range = c(10, 40)),
+      steps = list(
+        list(range = c(10, 18.5), color = "#FFDDC1"),
+        list(range = c(18.5, 25), color = "#C1FFC1"),
+        list(range = c(25, 30), color = "#FFFAC1"),
+        list(range = c(30, 40), color = "#FFC1C1")
+      ),
+      threshold = list(
+        line = list(color = "red", width = 4),
+        value = bmi
+      )
+    )
+  )
+}
+
+get_category_color <- function(category) {
+  if (category == "Normal") {
+    return("green")
+  } else if (category %in% c("Overweight", "Mild Thinness")) {
+    return("orange")
+  } else {
+    return("red")
+  }
+}
 
 # User Interface
 ui <- fluidPage(
@@ -90,12 +136,7 @@ server <- function(input, output, session) {
   datasetInput <- reactive({  
     bmi <- input$weight / ((input$height / 100) ^ 2)
     category <- categorize_bmi(bmi)
-    healthy_min_weight <- 18.5 * ((input$height / 100) ^ 2)
-    healthy_max_weight <- 25 * ((input$height / 100) ^ 2)
-    weight_change <- ifelse(
-      bmi < 18.5, paste0("Gain at least ", round(healthy_min_weight - input$weight, 1), " kg"),
-      ifelse(bmi > 25, paste0("Lose at least ", round(input$weight - healthy_max_weight, 1), " kg"), "Your weight is healthy")
-    )
+    weight_change <- calculate_weight_change(bmi, input$height, input$weight)
     
     data.frame(
       Height = paste0(input$height, " cm"),
@@ -108,14 +149,12 @@ server <- function(input, output, session) {
     )
   })
   
-  
   # Display Text Output
   output$bmi_output <- renderUI({
     if (input$submitbutton > 0) {
       isolate({
         data <- datasetInput()
         category <- data$Category
-        #color <- ifelse(category == "Normal", "green", ifelse(category %in% c("Overweight", "Mild Thinness"), "orange", "red"))
         color <- get_category_color(category)
         
         HTML(paste0(
@@ -150,44 +189,11 @@ server <- function(input, output, session) {
     if (input$submitbutton > 0) {
       isolate({
         bmi <- datasetInput()$BMI
-        
-        fig <- plot_ly(
-          type = "indicator",
-          mode = "gauge+number+delta",
-          value = bmi,
-          title = list(text = "BMI Gauge"),
-          gauge = list(
-            axis = list(range = c(10, 40)),
-            steps = list(
-              list(range = c(10, 18.5), color = "#FFDDC1"),
-              list(range = c(18.5, 25), color = "#C1FFC1"),
-              list(range = c(25, 30), color = "#FFFAC1"),
-              list(range = c(30, 40), color = "#FFC1C1")
-            ),
-            threshold = list(
-              line = list(color = "red", width = 4),
-              value = bmi
-            )
-          )
-        )
-        
-        fig
+        create_bmi_gauge(bmi)
       })
     }
   })
 }
-
-get_category_color <- function(category) {
-  if (category == "Normal") {
-    return("green")
-  } else if (category %in% c("Overweight", "Mild Thinness")) {
-    return("orange")
-  } else {
-    return("red")
-  }
-}
-
-
 
 # Create Shiny App
 shinyApp(ui = ui, server = server)
